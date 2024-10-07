@@ -15,7 +15,9 @@ stages:
       inputs:
         versionSpec: '20.x'
       displayName: 'Install Node.js'
-    - script: npm install
+    - script: |
+        npm install
+        npm run build
       displayName: 'Run script npm install'
 - stage: build
   displayName: Build SPA
@@ -23,7 +25,7 @@ stages:
   jobs:
   - job: BuildSPAJob
     steps:
-    - script: npm install & npm run build
+    - script: echo 'run build step'
       displayName: 'Run script npm run build'
 - stage: codecoverage
   displayName: Run Sonar Scan
