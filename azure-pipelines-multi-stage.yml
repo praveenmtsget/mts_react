@@ -9,14 +9,13 @@ stages:
 - stage: prebuild
   displayName: NPM Install
   jobs:
-  - job: job npm install
+  - job: jobnpminstall
     steps:
     - task: NodeTool@0
-    inputs:
-      versionSpec: '20.x'
-    displayName: 'Install Node.js'
-    - script: |
-        npm install
+      inputs:
+        versionSpec: '20.x'
+      displayName: 'Install Node.js'
+    - script: npm install
       displayName: 'Run script npm install'
 - stage: build
   displayName: Build SPA
@@ -29,18 +28,17 @@ stages:
       displayName: 'Run script npm run build'
 - stage: codecoverage
   displayName: Run Sonar Scan
-  dependsOn: build
   trigger: manual
   jobs:
   - job: SonarJob
     steps:
     - script: echo 'hello, world'
       displayName: 'Run script SonarScanner'
-- stage: Upload artifact zip file
+- stage: artifact_upload
   displayName: Upload zip file
   dependsOn: build
   jobs:
-  - job: ArtifactUpload Job
+  - job: ArtifactUploadJob
     steps:
     - script: echo 'hello, file upload'
       displayName: 'Run script File Upload curl command'
