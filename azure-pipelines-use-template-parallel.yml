@@ -1,0 +1,62 @@
+trigger:
+- main
+- develop
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+- stage: prebuildlinux
+  displayName: NPM Install Linux
+  jobs:
+  - job: jobnpminstalllinux
+    steps:
+    - template: templates/npm_build.yml  # Template reference
+- stage: prebuildwindows
+  displayName: NPM Install Windows
+  jobs:
+  - job: jobnpminstallwindows
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - template: templates/npm_build.yml  # Template reference
+- stage: build
+  displayName: Build SPA
+  isSkippable: false
+  jobs:
+  - job: BuildSPAJob
+    steps:
+    - script: echo 'run build step'
+      displayName: 'Run script npm run build'
+- stage: codecoverage
+  displayName: Run Sonar Scan
+  trigger: manual
+  jobs:
+  - job: SASTScan
+  strategy:
+    maxParallel: 4
+    matrix: 
+      SAST_SONAR_EAST:
+        Tool: Sonar
+        Location: us-east1
+      SAST_CHECKMARX_EAST:
+        Tool: Checmarx
+        Location: us-east1
+      SAST_SONAR_WEST:
+        Tool: Sonar
+        Location: us-west1
+      SAST_CHECKMARX_WEST:
+        Tool: Checmarx
+        Location: us-west1
+  
+    steps:
+    - script: echo 'Tool ${Tool} on Location ${Location}'
+      displayName: 'Run script SASTScan'
+- stage: artifact_upload
+  displayName: Upload zip file
+  dependsOn: build
+  jobs:
+  - job: ArtifactUploadJob
+    steps:
+    - script: echo 'hello, file upload'
+      displayName: 'Run script File Upload curl command'
