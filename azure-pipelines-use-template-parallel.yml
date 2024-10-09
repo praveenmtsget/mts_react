@@ -33,22 +33,22 @@ stages:
   trigger: manual
   jobs:
   - job: SASTScan
-  strategy:
-    maxParallel: 4
-    matrix: 
-      SAST_SONAR_EAST:
-        Tool: Sonar
-        Location: us-east1
-      SAST_CHECKMARX_EAST:
-        Tool: Checmarx
-        Location: us-east1
-      SAST_SONAR_WEST:
-        Tool: Sonar
-        Location: us-west1
-      SAST_CHECKMARX_WEST:
-        Tool: Checmarx
-        Location: us-west1
-  
+    strategy:
+      maxParallel: 4
+      matrix: 
+        SAST_SONAR_EAST:
+          Tool: Sonar
+          Location: us-east1
+        SAST_CHECKMARX_EAST:
+          Tool: Checmarx
+          Location: us-east1
+        SAST_SONAR_WEST:
+          Tool: Sonar
+          Location: us-west1
+        SAST_CHECKMARX_WEST:
+          Tool: Checmarx
+          Location: us-west1
+    
     steps:
     - script: echo 'Tool ${Tool} on Location ${Location}'
       displayName: 'Run script SASTScan'
